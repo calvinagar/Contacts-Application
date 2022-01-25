@@ -1,11 +1,14 @@
 <?php
 
-	include 'test.php';
+	include 'Connect.php';
 
 	$inData = getRequestInfo();
-	
-	$color = $inData["color"];
-	$userId = $inData["userId"];
+
+	$firstName = $inData["FirstName"];
+	$lastName = $inData["LastName"];
+	$email = $inData["Email"];
+	$phoneNum = $inData["PhoneNumber"];
+	$userId = $inData["UserID"];
 
 	$conn = connection();
 	if ($conn->connect_error) 
@@ -14,8 +17,8 @@
 	} 
 	else
 	{
-		$stmt = $conn->prepare("INSERT into Colors (UserId,Name) VALUES(?,?)");
-		$stmt->bind_param("ss", $userId, $color);
+		$stmt = $conn->prepare("INSERT into Contacts (FirstName, LastName, PhoneNumber, Email, UserID) VALUES(?,?,?,?,?)");
+		$stmt->bind_param("sssss", $firstName, $lastName, $phoneNum, $email, $userId);
 		$stmt->execute();
 		$stmt->close();
 		$conn->close();
