@@ -4,7 +4,7 @@
 
 	$inData = getRequestInfo();
 	
-	$id = 0;
+	$UserID = 0;
 	$FirstName = "";
 	$LastName = "";
 
@@ -16,14 +16,19 @@
 	}
 	else
 	{
-		$stmt = $conn->prepare("SELECT ID,FirstName,LastName FROM Users WHERE Login=? AND Password=?");
+		$stmt = $conn->prepare("SELECT UserID,FirstName,LastName FROM Users WHERE (Login=? AND Password=?)");
 		$stmt->bind_param("ss", $inData["Login"], $inData["Password"]);
 		$stmt->execute();
 		$result = $stmt->get_result();
 
-		if( $row = $result->fetch_assoc()  )
+		if( $row = $result->fetch_assoc() )
 		{
-			returnWithInfo( $row['FirstName'], $row['LastName'], $row['ID'] );
+			// update last login date
+			$stmt = $conn->prepare("UPDATE Users SET DateLastLoggedIn = now() WHERE UserID=?");
+			$stmt->bind_param("i", $row['UserID']);
+			$stmt->execute();
+
+			returnWithInfo( $row['FirstName'], $row['LastName'], $row['UserID'] );
 		}
 		else
 		{
@@ -47,13 +52,13 @@
 	
 	function returnWithError( $err )
 	{
-		$retValue = '{"ID":0,"FirstName":"","LastName":"","error":"' . $err . '"}';
+		$retValue = '{"UserID":0,"FirstName":"","LastName":"","error":"' . $err . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
 	
-	function returnWithInfo( $FirstName, $LastName, $id )
+	function returnWithInfo( $FirstName, $LastName, $UserID )
 	{
-		$retValue = '{"ID":' . $id . ',"FirstName":"' . $FirstName . '","LastName":"' . $LastName . '","error":""}';
+		$retValue = '{"UserID":' . $UserID . ',"FirstName":"' . $FirstName . '","LastName":"' . $LastName . '","error":""}';
 		sendResultInfoAsJson( $retValue );
 	}
 	

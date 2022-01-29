@@ -14,9 +14,9 @@
 	} 
 	else
 	{
-		$stmt = $conn->prepare("select * from Contacts where (FirstName like ? OR LastName like ?) AND UserID=?");
+		$stmt = $conn->prepare("SELECT * FROM Contacts WHERE ((FirstName LIKE ? OR LastName LIKE ?) AND UserID=?)");
 		$contactName = "%" . $inData["search"] . "%";
-		$stmt->bind_param("sss", $contactName, $contactName, $inData["userId"]);
+		$stmt->bind_param("sss", $contactName, $contactName, $inData["UserID"]);
 		$stmt->execute();
 		
 		$result = $stmt->get_result();
@@ -58,7 +58,7 @@
 	
 	function returnWithError( $err )
 	{
-		$retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
+		$retValue = '{"ID":0,"FirstName":"","LastName":"","PhoneNumber":"","Email":"","error":"' . $err . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
 	

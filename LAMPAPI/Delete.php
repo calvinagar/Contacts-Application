@@ -4,11 +4,6 @@
 
 	$inData = getRequestInfo();
 
-	$firstName = $inData["FirstName"];
-	$lastName = $inData["LastName"];
-	$login = $inData["Login"];
-	$password = $inData["Password"];
-	
 	$conn = connection();
 	if ($conn->connect_error) 
 	{
@@ -16,10 +11,10 @@
 	} 
 	else
 	{
-		$stmt = $conn->prepare("INSERT INTO Users (FirstName,LastName,Login,Password) VALUES (?,?,?,?)");
-		$stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
-		$stmt->execute();
-		
+		$stmt = $conn->prepare("DELETE FROM Contacts WHERE ID=?");
+		$stmt->bind_param("s", $inData["ID"]);
+		$stmt->execute();	
+
 		$stmt->close();
 		$conn->close();
 		returnWithError("");
@@ -41,5 +36,4 @@
 		$retValue = '{"error":"' . $err . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
-	
 ?>
