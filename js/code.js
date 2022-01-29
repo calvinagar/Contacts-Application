@@ -58,6 +58,53 @@ function doLogin()
 
 }
 
+function doRegister()
+{
+    firstName = document.getElementById("firstName").value;
+    lastName = document.getElementById("lastName").value;
+    
+    let login = document.getElementById("loginName").value;
+    let password = document.getElementById("loginPassword").value;
+//  var hash = md5( password );
+    
+    document.getElementById("loginResult").innerHTML = "";
+
+    let tmp = {FirstName:firstName,LastName:lastName,Login:login,Password:password};
+//  var tmp = {login:login,password:hash};
+    let jsonPayload = JSON.stringify( tmp );
+    
+    let url = urlBase + '/Register.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try
+    {
+        xhr.onreadystatechange = function() 
+        {
+            if (this.readyState == 4 && this.status == 200) 
+            {
+                let jsonObject = JSON.parse( xhr.responseText );
+                let error = jsonObject.error;
+        
+                if( error !== "" )
+                {        
+                    document.getElementById("loginResult").innerHTML = "Connection Error";
+                    return;
+                }
+    
+                window.location.href = "index.html";
+            }
+        };
+        xhr.send(jsonPayload);
+    }
+    catch(err)
+    {
+        document.getElementById("loginResult").innerHTML = err.message;
+    }
+
+}
+
 function saveCookie()
 {
 	let minutes = 20;
