@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="js/md5.js"></script>
+	<script type="text/javascript" src="js/code.js"></script>
+	<title>Add Contact</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row card d-flex justify-content-center mx-auto my-5 w-25">
+            <div class="form-group">
+                <br>
+                <h3 id="inner-title">Add Contact</h3>
+                <br>
+                <input type="text" id="firstName" placeholder="First Name" class="form-control">
+                <br>
+                <input type="text" id="lastName" placeholder="Last Name" class="form-control">
+                <br>
+                <input type="text" id="email" placeholder="Email (ex. johnsmith@gmail.com)" class="form-control">
+                <br>
+                <input type="text" id="phone number" placeholder="Phone # (ex. 123-456-7890)" class="form-control">
+                <a type="button" id="cancelButton" class="btn btn-outline-primary mt-3" href="active.html">Cancel</a>
+                <button type="button" id="addButton" class="btn btn-primary mt-3" onclick="addContact();">Add Contact</button>
+                <br><br>
+                <span id="addResult"></span>
+            </div>
+        </div>
+    </div>
+
+</html>
