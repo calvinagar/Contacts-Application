@@ -210,7 +210,7 @@ function doSearch()
 			//{
 				if (this.readyState == 4 && this.status == 200) 
 				{
-					document.getElementById("searchResult").innerHTML = "Contact(s) has been retrieved";
+					document.getElementById("searchResult").innerHTML = "";
 					let jsonObject = JSON.parse( xhr.responseText );
 					
 					const contactsTable = document.getElementById("contactsTable");
@@ -264,7 +264,7 @@ function doSearch()
 						del.addEventListener('click', function() {
 							if (confirm('Are you sure you would like to remove this contact? It can not be undone.'))
 							{
-								//delete
+								doDelete(jsonObject.results[i].ID);
 							}
 						});
 
@@ -280,6 +280,35 @@ function doSearch()
 			//{
 			//	document.getElementById("searchResult").innerHTML = err.message;
 			//}
+		};
+		xhr.send(jsonPayload);
+	}
+	catch(err)
+	{
+		document.getElementById("searchResult").innerHTML = err.message;
+	}
+	
+}
+
+function doDelete(id)
+{
+	let tmp = {ID:id};
+	let jsonPayload = JSON.stringify( tmp );
+
+	let url = urlBase + '/Delete.' + extension;
+	
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	try
+	{
+		xhr.onreadystatechange = function() 
+		{
+			if (this.readyState == 4 && this.status == 200) 
+			{
+				doSearch();
+				document.getElementById("searchResult").innerHTML = "";
+			}
 		};
 		xhr.send(jsonPayload);
 	}
