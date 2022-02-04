@@ -142,7 +142,7 @@ function readCookie()
 	}
 	else
 	{
-		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
+		//document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
 	}
 }
 
@@ -186,17 +186,18 @@ function addColor()
 	
 }
 
-function searchColor()
+function doSearch()
 {
 	let srch = document.getElementById("searchText").value;
-	document.getElementById("colorSearchResult").innerHTML = "";
-	
-	let colorList = "";
+	readCookie();
+	console.log(userId);
+	document.getElementById("searchResult").innerHTML = "";
 
-	let tmp = {search:srch,userId:userId};
+	let tmp = {search:srch,UserID:userId};
 	let jsonPayload = JSON.stringify( tmp );
 
-	let url = urlBase + '/SearchColors.' + extension;
+
+	let url = urlBase + '/SearchContacts.' + extension;
 	
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
@@ -205,28 +206,86 @@ function searchColor()
 	{
 		xhr.onreadystatechange = function() 
 		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
-				let jsonObject = JSON.parse( xhr.responseText );
-				
-				for( let i=0; i<jsonObject.results.length; i++ )
+			//try
+			//{
+				if (this.readyState == 4 && this.status == 200) 
 				{
-					colorList += jsonObject.results[i];
-					if( i < jsonObject.results.length - 1 )
+					document.getElementById("searchResult").innerHTML = "Contact(s) has been retrieved";
+					let jsonObject = JSON.parse( xhr.responseText );
+					
+					const contactsTable = document.getElementById("contactsTable");
+					contactsTable.innerHTML =  "";
+					
+					console.log(xhr.responseText)
+					console.log(tmp);
+					console.log(jsonObject);
+
+					for( let i=0; i<jsonObject.results.length; i++ )
 					{
-						colorList += "<br />\r\n";
+						const item = document.createElement("tr");
+						const fnameCOL = document.createElement("td");
+						const lnameCOL = document.createElement("td");
+						const phoneCOL = document.createElement("td");
+						const emailCOL = document.createElement("td");
+						const editCOL = document.createElement("td");
+						const delCOL = document.createElement("td");
+
+						fnameCOL.innerHTML = jsonObject.results[i].FirstName;
+						lnameCOL.innerHTML = jsonObject.results[i].LastName;
+						phoneCOL.innerHTML = jsonObject.results[i].PhoneNumber;
+						emailCOL.innerHTML = jsonObject.results[i].Email;
+
+						item.appendChild(fnameCOL);
+						item.appendChild(lnameCOL);
+						item.appendChild(phoneCOL);
+						item.appendChild(emailCOL);
+
+						const edit = document.createElement("a");
+						edit.innerHTML = "Edit";
+						edit.classList.add("btn");
+						edit.classList.add("btn-primary");
+						edit.classList.add("mt-3");
+						edit.setAttribute("name", jsonObject.results[i].ID)
+
+						edit.addEventListener('click', function() {
+							window.location.href = "edit.html";
+						});
+
+						editCOL.appendChild(edit);
+						item.appendChild(editCOL);
+
+						const del = document.createElement("a");
+						del.innerHTML = "Delete";
+						del.classList.add("btn");
+						del.classList.add("btn-outline-danger");
+						del.classList.add("mt-3");
+						del.setAttribute("name", jsonObject.results[i].ID)
+
+						del.addEventListener('click', function() {
+							if (confirm('Are you sure you would like to remove this contact? It can not be undone.'))
+							{
+								//delete
+							}
+						});
+
+						delCOL.appendChild(del);
+						item.appendChild(delCOL);
+
+						contactsTable.appendChild(item);
 					}
-				}
 				
-				document.getElementsByTagName("p")[0].innerHTML = colorList;
-			}
+				}
+			//}
+			//catch(err)
+			//{
+			//	document.getElementById("searchResult").innerHTML = err.message;
+			//}
 		};
 		xhr.send(jsonPayload);
 	}
 	catch(err)
 	{
-		document.getElementById("colorSearchResult").innerHTML = err.message;
+		document.getElementById("searchResult").innerHTML = err.message;
 	}
 	
 }

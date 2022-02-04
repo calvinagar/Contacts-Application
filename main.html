@@ -12,8 +12,32 @@
 
 <body>
     <div class="container">
-        <div class="row card d-flex justify-content-center mx-auto my-5 w-25">
-            <h3>MAIN</h3>
+        <div class="row card d-flex justify-content-center mx-auto my-5 w-75">
+            <h3>Search</h3>
+            <div class="input-group">
+                <input type="text" id="searchText" placeholder="Search for a contact" class="form-control">
+                <div class="input-group-append">
+                    <button type="button" id="searchButton" class="btn btn-primary" onclick="doSearch();">Go</button>
+                </div>
+            </div>
+            <span id="searchResult"></span>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Phone Number</th>
+                        <th scope="col">Email</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+
+                <tbody id="contactsTable">
+
+                </tbody>
+            </table>
+
         </div>
     </div>
 
