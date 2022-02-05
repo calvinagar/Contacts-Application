@@ -13,12 +13,12 @@ function doLogin()
 	
 	let login = document.getElementById("loginName").value;
 	let password = document.getElementById("loginPassword").value;
-	//var hash = md5( password );
+	var hash = md5( password );
 	
 	document.getElementById("loginResult").innerHTML = "";
 
-	let tmp = {Login:login,Password:password};
-	//var tmp = {login:login,password:hash};
+	//let tmp = {Login:login,Password:password};
+	var tmp = {Login:login,Password:hash};
 	let jsonPayload = JSON.stringify( tmp );
 	
 	let url = urlBase + '/Login.' + extension;
@@ -65,12 +65,12 @@ function doRegister()
     
     let login = document.getElementById("loginName").value;
     let password = document.getElementById("loginPassword").value;
-//  var hash = md5( password );
+	var hash = md5( password );
     
     document.getElementById("loginResult").innerHTML = "";
 
-    let tmp = {FirstName:firstName,LastName:lastName,Login:login,Password:password};
-//  var tmp = {login:login,password:hash};
+    let tmp = {FirstName:firstName,LastName:lastName,Login:login,Password:hash};
+	//var tmp = {login:login,password:hash};
     let jsonPayload = JSON.stringify( tmp );
     
     let url = urlBase + '/Register.' + extension;
@@ -153,37 +153,6 @@ function doLogout()
 	lastName = "";
 	document.cookie = "firstName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
 	window.location.href = "index.html";
-}
-
-function addColor()
-{
-	let newColor = document.getElementById("colorText").value;
-	document.getElementById("colorAddResult").innerHTML = "";
-
-	let tmp = {color:newColor,userId,userId};
-	let jsonPayload = JSON.stringify( tmp );
-
-	let url = urlBase + '/AddColor.' + extension;
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("colorAddResult").innerHTML = "Color has been added";
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("colorAddResult").innerHTML = err.message;
-	}
-	
 }
 
 function doSearch()
@@ -361,6 +330,54 @@ function addContact()
     catch(err)
     {
         document.getElementById("addResult").innerHTML = err.message;
+    }
+
+}
+
+function editContact()
+{
+    readCookie();
+
+    firstName = document.getElementById("firstName").value;
+    lastName = document.getElementById("lastName").value;
+    
+    let email = document.getElementById("email").value;
+    let phoneNumber = document.getElementById("phoneNumber").value;
+	let id = document.getElementById("contactID").value;
+    
+    document.getElementById("updateResult").innerHTML = "";
+
+    let tmp = {FirstName:firstName,LastName:lastName,PhoneNumber:phoneNumber,Email:email,UserID:userId,ID:id};
+    let jsonPayload = JSON.stringify( tmp );
+    
+    let url = urlBase + '/UpdateContact.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try
+    {
+        xhr.onreadystatechange = function() 
+        {
+            if (this.readyState == 4 && this.status == 200) 
+            {
+                let jsonObject = JSON.parse( xhr.responseText );
+                let error = jsonObject.error;
+        
+                if( error !== "" )
+                {        
+                    document.getElementById("updateResult").innerHTML = "Connection Error";
+                    return;
+                }
+    
+                window.location.href = "main.html";
+            }
+        };
+        xhr.send(jsonPayload);
+    }
+    catch(err)
+    {
+        document.getElementById("updateResult").innerHTML = err.message;
     }
 
 }
