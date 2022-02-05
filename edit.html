@@ -23,13 +23,28 @@
                 <br>
                 <input type="text" id="email" placeholder="Email (ex. johnsmith@gmail.com)" value="johnsmith@gmail.com" class="form-control">
                 <br>
-                <input type="text" id="phone number" placeholder="Phone # (ex. 123-456-7890)" value="123-456-7890" class="form-control">
-                <a type="button" id="cancelButton" class="btn btn-outline-primary mt-3" href="active.html">Cancel</a>
+                <input type="text" id="phoneNumber" placeholder="Phone # (ex. 123-456-7890)" value="123-456-7890" class="form-control">
+                <input type="hidden" id="contactID" placeholder="" value="">
+                <a type="button" id="cancelButton" class="btn btn-outline-primary mt-3" href="main.html">Cancel</a>
                 <button type="button" id="editButton" class="btn btn-primary mt-3" onclick="editContact();">Update Contact</button>
                 <br><br>
                 <span id="loginResult"></span>
             </div>
         </div>
     </div>
+
+    <script>
+        window.onload = function(){
+            var params = new URLSearchParams(window.location.search);
+            var string = params.get("contact");
+            let obj = JSON.parse(string);
+
+            document.getElementById('firstName').value = obj.FirstName;
+            document.getElementById('lastName').value = obj.LastName;
+            document.getElementById('email').value = obj.Email;
+            document.getElementById('phoneNumber').value = obj.PhoneNumber;
+            document.getElementById('contactID').value = obj.ID;
+        };
+    </script>
 
 </html>

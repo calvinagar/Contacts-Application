@@ -215,10 +215,6 @@ function doSearch()
 					
 					const contactsTable = document.getElementById("contactsTable");
 					contactsTable.innerHTML =  "";
-					
-					console.log(xhr.responseText)
-					console.log(tmp);
-					console.log(jsonObject);
 
 					for( let i=0; i<jsonObject.results.length; i++ )
 					{
@@ -244,11 +240,14 @@ function doSearch()
 						edit.innerHTML = "Edit";
 						edit.classList.add("btn");
 						edit.classList.add("btn-primary");
-						edit.classList.add("mt-3");
+						//edit.classList.add("mt-3");
 						edit.setAttribute("name", jsonObject.results[i].ID)
 
 						edit.addEventListener('click', function() {
-							window.location.href = "edit.html";
+							var params = new URLSearchParams();
+  							params.append("contact", JSON.stringify(jsonObject.results[i]));
+
+							window.location.href = "edit.html?" + params.toString();
 						});
 
 						editCOL.appendChild(edit);
@@ -258,7 +257,7 @@ function doSearch()
 						del.innerHTML = "Delete";
 						del.classList.add("btn");
 						del.classList.add("btn-outline-danger");
-						del.classList.add("mt-3");
+						//del.classList.add("mt-3");
 						del.setAttribute("name", jsonObject.results[i].ID)
 
 						del.addEventListener('click', function() {
@@ -317,4 +316,51 @@ function doDelete(id)
 		document.getElementById("searchResult").innerHTML = err.message;
 	}
 	
+}
+
+function addContact()
+{
+    readCookie();
+
+    firstName = document.getElementById("firstName").value;
+    lastName = document.getElementById("lastName").value;
+    
+    let email = document.getElementById("email").value;
+    let phoneNumber = document.getElementById("phone number").value;
+    
+    document.getElementById("addResult").innerHTML = "";
+
+    let tmp = {FirstName:firstName,LastName:lastName,PhoneNumber:phoneNumber,Email:email,UserID:userId};
+    let jsonPayload = JSON.stringify( tmp );
+    
+    let url = urlBase + '/AddContact.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try
+    {
+        xhr.onreadystatechange = function() 
+        {
+            if (this.readyState == 4 && this.status == 200) 
+            {
+                let jsonObject = JSON.parse( xhr.responseText );
+                let error = jsonObject.error;
+        
+                if( error !== "" )
+                {        
+                    document.getElementById("addResult").innerHTML = "Connection Error";
+                    return;
+                }
+    
+                window.location.href = "main.html";
+            }
+        };
+        xhr.send(jsonPayload);
+    }
+    catch(err)
+    {
+        document.getElementById("addResult").innerHTML = err.message;
+    }
+
 }
