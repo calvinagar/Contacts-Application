@@ -185,7 +185,7 @@ function doSearch()
 					const contactsTable = document.getElementById("contactsTable");
 					contactsTable.innerHTML =  "";
 
-					if (jsonObject.results === null) {
+					if (jsonObject.results == null) {
 						document.getElementById("searchResult").innerHTML = "No contacts returned";
 						return;
 					} else {
